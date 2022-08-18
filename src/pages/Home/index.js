@@ -15,7 +15,7 @@ export default function Home() {
       }
     );
   }, []);
-  console.log("data", data);
+  
   return (
     <div className="App">
       <h1 className="header">Folder</h1>

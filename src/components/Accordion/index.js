@@ -7,8 +7,7 @@ function Accodian({ explorer }) {
   const [itemsData, setItemData] = useState("");
   const [data, setData] = useState([]);
   const [innerData, setInnerData] = useState([]);
-  console.log("explorer.entries", explorer.entries);
-
+  const [innerChildData, setInnerDataChild] = useState([]);
   if (explorer) {
     function getUniqueListBy(arr, key) {
       return [
@@ -31,7 +30,13 @@ function Accodian({ explorer }) {
             ...(prevState !== undefined
               ? getUniqueListBy(prevState, "name")
               : null),
-            response.data.entries!==undefined?response.data.entries:[{name:"... (other files and directories inside this directory) ..."}],
+            response.data.entries !== undefined
+              ? response.data.entries
+              : [
+                  {
+                    name: "... (other files and directories inside this directory) ...",
+                  },
+                ],
           ]);
         },
         (error) => {
@@ -62,7 +67,15 @@ function Accodian({ explorer }) {
 
       Axios.get(`${DomainUrlAPi.SERVER_API_URL}=${itemsData}%2F${item}`).then(
         (response) => {
-          setInnerData(response.data.entries!==undefined?response.data.entries:[{name:"... (other files and directories inside this directory) ..."}],);
+          setInnerData(
+            response.data.entries !== undefined
+              ? response.data.entries
+              : [
+                  {
+                    name: "... (other files and directories inside this directory) ...",
+                  },
+                ]
+          );
         },
         (error) => {
           console.log(error);
@@ -74,7 +87,7 @@ function Accodian({ explorer }) {
         return (
           innerData !== undefined &&
           innerData?.map((child, i) => {
-            return <div>{child.name}</div>;
+            return <div onClick={innerChildShowData}>{child.name}</div>;
           })
         );
       } else {
@@ -84,8 +97,23 @@ function Accodian({ explorer }) {
     const ModalClose = () => {
       setExpand(false);
     };
-
-    console.log("innerChild", innerData);
+    const innerChildShowData = () => {
+      setInnerDataChild([
+        { name: "... (other files and directories inside this directory) ..." },
+      ]);
+    };
+    const innerChildShowChildData = () => {
+      if (innerChildData) {
+        return (
+          innerChildData !== undefined &&
+          innerChildData?.map((child, i) => {
+            return <div>{child.name}</div>;
+          })
+        );
+      } else {
+        return null;
+      }
+    };
     return (
       <div>
         <>
@@ -123,6 +151,9 @@ function Accodian({ explorer }) {
                   <div>{showInnerChild()}</div>
                   <div style={{ marginLeft: "2rem" }}>
                     {showInsideInnerChild()}
+                  </div>
+                  <div style={{ marginLeft: "2rem" }}>
+                    {innerChildShowChildData()}
                   </div>
                 </div>
               </div>
