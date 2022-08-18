@@ -62,12 +62,6 @@ function Accodian({ explorer }) {
 
       Axios.get(`${DomainUrlAPi.SERVER_API_URL}=${itemsData}%2F${item}`).then(
         (response) => {
-          // setInnerData((prevState) => [
-          //   ...(prevState !== undefined
-          //     ? getUniqueListBy(prevState, "name")
-          //     : null),
-          //   response.data.entries!==undefined?response.data.entries:[{name:"... (other files and directories inside this directory) ..."}],
-          // ]);
           setInnerData(response.data.entries!==undefined?response.data.entries:[{name:"... (other files and directories inside this directory) ..."}],);
         },
         (error) => {
